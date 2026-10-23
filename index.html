@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><title>Catch Phrase</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;font-family:-apple-system,system-ui,sans-serif;background:#1d2b3a;color:#fff;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;user-select:none}
+.s{display:none;width:100%;max-width:520px;padding:20px}.on{display:block}
+h1{font-size:44px;margin:0 0 10px}button{font-size:22px;padding:16px;margin:8px 0;width:100%;border:0;border-radius:14px;background:#3A8EC5;color:#fff;font-weight:700}
+button.g{background:#555}select{font-size:20px;padding:12px;width:100%;border-radius:12px;margin:6px 0}
+#word{font-size:46px;font-weight:800;min-height:160px;display:flex;align-items:center;justify-content:center;background:#fff;color:#1d2b3a;border-radius:20px;margin:20px 0;padding:10px}
+.sc{display:flex;gap:10px}.sc div{flex:1;background:#2c3e50;border-radius:14px;padding:12px;font-size:20px}.sc b{display:block;font-size:40px}
+#bar{height:10px;background:#3A8EC5;border-radius:5px;transition:width .2s}
+</style></head><body>
+<div id="home" class="s on"><h1>Catch Phrase</h1><p>Works offline. Pass the phone, describe the word, don't say it.</p>
+<select id="cat"></select><select id="len"><option value="45">Short round (45-75s)</option><option value="60" selected>Normal round (60-90s)</option><option value="90">Long round (90-120s)</option></select>
+<div class="sc"><div>Team A<b id="a">0</b></div><div>Team B<b id="b">0</b></div></div>
+<button onclick="start()">Start round</button><button class="g" onclick="reset()">Reset scores</button></div>
+<div id="play" class="s"><div id="bar"></div><div id="word"></div><button onclick="next()">Got it / Next</button><button class="g" onclick="skip()">Skip</button></div>
+<div id="end" class="s"><h1>BUZZ!</h1><p>Time's up. The team holding the phone loses the round.</p><p>Who scores the point?</p>
+<div class="sc"><button onclick="pt('a')">Team A</button><button onclick="pt('b')">Team B</button></div><button class="g" onclick="show('home')">No point</button></div>
+<script>
+const W={
+"Everything":[],
+"Food":"pizza,taco,sushi,pancake,spaghetti,hamburger,popcorn,ice cream,cheesecake,burrito,bacon,avocado,pickle,cupcake,meatball,lasagna,waffle,pretzel,guacamole,barbecue,cereal,donut,milkshake,nachos,peanut butter,lemonade,watermelon,french fries,hot dog,omelet,salsa,brownie,coffee,smoothie,corn dog,fried chicken,mac and cheese,s'mores,cotton candy,grilled cheese".split(","),
+"Places":"airport,beach,library,hospital,casino,zoo,museum,gas station,dentist office,gym,bowling alley,campground,church,stadium,Las Vegas,Texas,California,Disneyland,New York,Grand Canyon,bakery,laundromat,farm,jail,movie theater,water park,mall,parking lot,ski resort,classroom".split(","),
+"Things":"umbrella,toothbrush,ladder,fence,hammer,laptop,microwave,flashlight,backpack,trampoline,wheelbarrow,sunglasses,remote control,doorbell,blender,lawn mower,headphones,suitcase,thermostat,mailbox,skateboard,candle,stapler,mirror,pillow,shovel,bicycle,refrigerator,calculator,campfire".split(","),
+"Actions":"sneeze,juggle,whisper,surf,knit,parallel park,moonwalk,sleepwalk,high five,brush teeth,tie shoes,skydive,yodel,fist bump,cartwheel,karaoke,snore,hiccup,wink,salute,fish,bake,vacuum,carpool,binge watch".split(","),
+"Pop culture":"Star Wars,Harry Potter,Taylor Swift,Super Bowl,Netflix,TikTok,Spider-Man,The Office,Batman,Mickey Mouse,Elvis,Barbie,Shrek,Mario,Pokemon,Friends,Titanic,Frozen,Yellowstone,Olympics,Monopoly,Lego,Jeopardy,Toy Story,SpongeBob".split(","),
+"Brain rot":"skibidi toilet,rizz,gyatt,Ohio,sigma,fanum tax,mewing,delulu,no cap,bussin,slay,ate and left no crumbs,NPC,main character,aura points,glazing,mogging,looksmaxxing,Grimace shake,Baby Gronk,Livvy Dunne,Kai Cenat,IShowSpeed,sus,it's giving,bet,rent free,touch grass,ratio,W rizz,L,yapping,the ick,girl dinner,roman empire,beige flag,simp,stan,caught in 4K,based,lowkey,highkey,bruh,sheesh,erm what the sigma,goated,cooked,chat is this real,six seven,Italian brainrot,tralalero tralala,tung tung tung sahur,Duolingo owl,Stanley cup,emotional damage,hawk tuah,mid,bop,valid,slay queen,understood the assignment,core memory,pookie,big back,unc,demure,very mindful".split(","),
+"Animals":"giraffe,penguin,kangaroo,octopus,flamingo,armadillo,squirrel,shark,dolphin,llama,porcupine,hamster,peacock,sloth,jellyfish,bulldog,raccoon,turtle,eagle,goldfish,skunk,zebra,koala,rooster,bass".split(",")};
+W.Everything=Object.keys(W).filter(k=>k!="Everything").flatMap(k=>W[k]);
+const cat=document.getElementById('cat');Object.keys(W).forEach(k=>cat.add(new Option(k,k)));
+let sc={a:0,b:0},deck=[],t,end,tot;try{sc=JSON.parse(localStorage.cp||'{"a":0,"b":0}')}catch(e){}
+function save(){try{localStorage.cp=JSON.stringify(sc)}catch(e){}document.getElementById('a').textContent=sc.a;document.getElementById('b').textContent=sc.b}save();
+function show(id){document.querySelectorAll('.s').forEach(e=>e.classList.remove('on'));document.getElementById(id).classList.add('on')}
+function shuffle(x){x=x.slice();for(let i=x.length-1;i>0;i--){let j=Math.random()*(i+1)|0;[x[i],x[j]]=[x[j],x[i]]}return x}
+let ac;function beep(f,d){try{ac=ac||new(window.AudioContext||webkitAudioContext)();let o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.connect(g);g.connect(ac.destination);g.gain.value=.2;o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function start(){deck=shuffle(W[cat.value]);let base=+document.getElementById('len').value;tot=(base+Math.random()*30)*1000;end=Date.now()+tot;show('play');next(true);tick()}
+function ding(){beep(1046,.12);setTimeout(()=>beep(1568,.25),110)}
+function boop(){beep(300,.12);setTimeout(()=>beep(200,.2),120)}
+function next(first){if(!first)ding();if(!deck.length)deck=shuffle(W[cat.value]);document.getElementById('word').textContent=deck.pop()}
+function skip(){boop();if(!deck.length)deck=shuffle(W[cat.value]);document.getElementById('word').textContent=deck.pop()}
+function tick(){let left=end-Date.now();if(left<=0){beep(220,1);navigator.vibrate&&navigator.vibrate(800);show('end');return}
+let p=left/tot;document.getElementById('bar').style.width=(p*100)+'%';let sec=left/1000;let iv=sec>20?1000:sec>10?600:sec>5?350:150;beep(sec>10?660:sec>5?880:1100,.04);t=setTimeout(tick,iv)}
+function pt(x){sc[x]++;save();show('home')}
+function reset(){sc={a:0,b:0};save()}
+</script></body></html>
