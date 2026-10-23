@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes"><title>Catch Phrase</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><title>Catch Phrase</title><link rel="manifest" href="manifest.json">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;font-family:-apple-system,system-ui,sans-serif;background:#1d2b3a;color:#fff;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;user-select:none}
 .s{display:none;width:100%;max-width:520px;padding:20px}.on{display:block}
@@ -42,4 +42,5 @@ function tick(){let left=end-Date.now();if(left<=0){[150,153,300,450,600].forEac
 let p=left/tot;document.getElementById('bar').style.width=(p*100)+'%';let sec=left/1000;let iv=sec>20?1000:sec>10?600:sec>5?350:150;beep(sec>10?660:sec>5?880:1100,.04);t=setTimeout(tick,iv)}
 function pt(x){sc[x]++;save();show('home')}
 function reset(){sc={a:0,b:0};save()}
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js');
 </script></body></html>
