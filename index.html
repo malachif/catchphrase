@@ -8,14 +8,16 @@ button.g{background:#555}select{font-size:20px;padding:12px;width:100%;border-ra
 #word{font-size:46px;font-weight:800;min-height:160px;display:flex;align-items:center;justify-content:center;background:#fff;color:#1d2b3a;border-radius:20px;margin:20px 0;padding:10px}
 .sc{display:flex;gap:10px}.sc div{flex:1;background:#2c3e50;border-radius:14px;padding:12px;font-size:20px}.sc b{display:block;font-size:40px}
 #bar{height:10px;background:#3A8EC5;border-radius:5px;transition:width .2s}
-.tg{display:flex;justify-content:space-between;align-items:center;background:#2c3e50;border-radius:12px;padding:10px 14px;margin:6px 0;font-size:18px}.tg input{width:26px;height:26px}#ov{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:9}#ov.on{display:flex}#ov h1{font-size:48px;color:#f5c542}#ov p{font-size:24px}.row{display:flex;gap:10px}.row button{flex:1}
+.tg{display:flex;justify-content:space-between;align-items:center;background:#2c3e50;border-radius:12px;padding:10px 14px;margin:6px 0;font-size:18px}.tg input{width:26px;height:26px}#set{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:24px;z-index:9}#set.on{display:flex}#ov{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:9}#ov.on{display:flex}#ov h1{font-size:48px;color:#f5c542}#ov p{font-size:24px}.row{display:flex;gap:10px}.row button{flex:1}
 </style></head><body>
 <div id="home" class="s on"><h1>Catch Phrase</h1><p>Works offline. Pass the phone, describe the word, don't say it.</p>
 <select id="cat"></select><select id="len"><option value="45">Short round (45-75s)</option><option value="60" selected>Normal round (60-90s)</option><option value="90">Long round (90-120s)</option></select>
-<div class="tg">Joker: skip a person<input type="checkbox" id="jSkip"></div><div class="tg">Joker: reverse direction<input type="checkbox" id="jRev"></div><div class="tg">Joker: go twice<input type="checkbox" id="jTwice"></div>
+<button class="g" onclick="setOpen()">⚙️ Game settings</button>
 <div class="sc"><div>Team A<b id="a">0</b></div><div>Team B<b id="b">0</b></div></div>
 <button onclick="start()">Start round</button><button class="g" onclick="reset()">Reset scores</button></div>
 <div id="play" class="s"><div id="bar"></div><div id="word"></div><button onclick="next()">Got it / Next</button><button class="g" onclick="skip()">Skip</button><div class="row"><button class="g" onclick="pause()">Pause</button><button class="g" onclick="quit()">Exit to scoreboard</button></div></div>
+<div id="set" class="ovl"><div style="width:100%;max-width:480px"><h1 style="font-size:34px">Game settings</h1><p>Joker cards pop up on about 1 in 5 correct answers.</p><div class="tg">Joker: skip a person<input type="checkbox" id="jSkip"></div><div class="tg">Joker: reverse direction<input type="checkbox" id="jRev"></div><div class="tg">Joker: go twice<input type="checkbox" id="jTwice"></div>
+<button onclick="setClose()">Done</button></div></div>
 <div id="ov"><h1 id="ovT"></h1><p id="ovP"></p><button id="ovB"></button><button class="g" id="ovX" onclick="quit()">Exit to scoreboard</button></div>
 <div id="end" class="s"><h1>BUZZ!</h1><p>Time's up. The team holding the phone loses the round.</p><p>Who scores the point?</p>
 <div class="sc"><button onclick="pt('a')">Team A</button><button onclick="pt('b')">Team B</button></div><button class="g" onclick="show('home')">No point</button></div>
@@ -45,6 +47,10 @@ function tick(){if(paused)return;let left=end-Date.now();if(left<=0){[150,153,30
 let p=left/tot;document.getElementById('bar').style.width=(p*100)+'%';let sec=left/1000;let iv=sec>20?1000:sec>10?600:sec>5?350:150;beep(sec>10?660:sec>5?880:1100,.04);t=setTimeout(tick,iv)}
 function pt(x){sc[x]++;save();show('home')}
 function reset(){sc={a:0,b:0};save()}
+
+function setOpen(){document.getElementById('set').classList.add('on')}
+function setClose(){const o={};Object.keys(J).forEach(k=>o[k]=document.getElementById(k).checked);try{localStorage.cpj=JSON.stringify(o)}catch(e){}document.getElementById('set').classList.remove('on')}
+try{const o=JSON.parse(localStorage.cpj||'{}');Object.keys(o).forEach(k=>{const e=document.getElementById(k);if(e)e.checked=o[k]})}catch(e){}
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js');
 
 const J={jSkip:['SKIP!','Skip the next person. Pass it two spots over.'],jRev:['REVERSE!','Pass the other direction from now on.'],jTwice:['GO TWICE!','You go again. Keep the phone.']};
