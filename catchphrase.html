@@ -76,7 +76,8 @@ function setClose(){const o={};Object.keys(J).forEach(k=>o[k]=document.getElemen
 try{const o=JSON.parse(localStorage.cpj||'{}');Object.keys(o).forEach(k=>{const e=document.getElementById(k);if(e)e.checked=o[k]})}catch(e){}
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js');
 
-const J={jSkip:['SKIP!','Skip the next person. Pass it two spots over.'],jRev:['REVERSE!','Pass the other direction from now on.'],jTwice:['GO TWICE!','You go again. Keep the phone.'],jAccent:['ACCENT!','Give clues in an accent (British, Southern, pirate, your pick) until your team gets it.'],jMime:['CHARADES!','No talking. Act out the next word.'],jOne:['ONE WORD!','Only one-word clues for the next word.'],jSing:['SING IT!','Sing every clue for the next word.'],jSwap:['VETO!','The other team can make you skip the next word once.']};
+const J={jSkip:['SKIP!','Skip the next person. Pass it two spots over.'],jRev:['REVERSE!','Pass the other direction from now on.'],jTwice:['GO TWICE!','You go again. Keep the phone.'],jAccent:['ACCENT!',''],jMime:['CHARADES!','No talking. Act out the next word.'],jOne:['ONE WORD!','Only one-word clues for the next word.'],jSing:['SING IT!','Sing every clue for the next word.'],jSwap:['VETO!','The other team can make you skip the next word once.']};
+const AC=['pirate','cowboy','valley girl','sports announcer','robot','Shakespeare actor','British royal','Southern grandma','surfer bro','movie trailer narrator','news anchor','Boston guy','Minnesota mom','Australian zookeeper','game show host','Batman','toddler','evil villain','yoga instructor','auctioneer'];
 let paused=false,rem=0;
 function ov(t,pp,b,fn,x){ovT.textContent=t;ovP.textContent=pp;ovB.textContent=b;ovB.onclick=fn;ovX.style.display=x?'block':'none';document.getElementById('ov').classList.add('on')}
 function ovOff(){document.getElementById('ov').classList.remove('on')}
@@ -84,5 +85,5 @@ function hold(){clearTimeout(t);rem=end-Date.now();paused=true}
 function go(){ovOff();paused=false;end=Date.now()+rem;tick()}
 function pause(){hold();ov('PAUSED','Timer is stopped.','Resume',go,true)}
 function quit(){clearTimeout(t);paused=false;ovOff();show('home')}
-function joker(){const on=Object.keys(J).filter(k=>document.getElementById(k).checked);if(!on.length||Math.random()>.18)return false;const k=on[Math.random()*on.length|0];hold();beep(523,.1,.5,'square');setTimeout(()=>beep(784,.2,.5,'square'),110);ov(J[k][0],J[k][1],'Continue',go,false);return true}
+function joker(){const on=Object.keys(J).filter(k=>document.getElementById(k).checked);if(!on.length||Math.random()>.18)return false;const k=on[Math.random()*on.length|0];hold();beep(523,.1,.5,'square');setTimeout(()=>beep(784,.2,.5,'square'),110);ov(J[k][0],k=='jAccent'?'Give clues as a '+AC[Math.random()*AC.length|0]+' until your team gets it.':J[k][1],'Continue',go,false);return true}
 </script></body></html>
