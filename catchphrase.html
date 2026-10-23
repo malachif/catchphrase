@@ -9,8 +9,24 @@ button.g{background:#555}select{font-size:20px;padding:12px;width:100%;border-ra
 .sc{display:flex;gap:10px}.sc div{flex:1;background:#2c3e50;border-radius:14px;padding:12px;font-size:20px}.sc b{display:block;font-size:40px}
 #bar{height:10px;background:#3A8EC5;border-radius:5px;transition:width .2s}
 .tg{display:flex;justify-content:space-between;align-items:center;background:#2c3e50;border-radius:12px;padding:10px 14px;margin:6px 0;font-size:18px}.tg input{width:26px;height:26px}#set{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:24px;z-index:9}#set.on{display:flex}#ov{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:9}#ov.on{display:flex}#ov h1{font-size:48px;color:#f5c542}#ov p{font-size:24px}.row{display:flex;gap:10px}.row button{flex:1}
+
+body{background:radial-gradient(circle at 50% 30%,#3fc6d4,#1a8fa0 70%,#0f6b78);font-family:'Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif}
+.logo{line-height:.9;margin:0 0 14px;transform:rotate(-6deg)}.logo .c{display:block;font-size:46px;color:#fff;font-weight:900;text-shadow:3px 3px 0 #123}.logo .p{display:block;font-size:56px;color:#7b2d9b;font-weight:900;text-shadow:3px 3px 0 #fff;margin-left:40px}
+p{color:#eafcff}
+button{background:#1fb5a3;border:4px solid #1b2433;border-radius:40px;box-shadow:0 6px 0 #1b2433;text-transform:uppercase;letter-spacing:1px}
+button:active{transform:translateY(4px);box-shadow:0 2px 0 #1b2433}
+button.g{background:#2a3c8f}
+.sc div{background:#1b2433;border:4px solid #f39a1e;border-radius:50%;aspect-ratio:1;display:flex;flex-direction:column;justify-content:center}.sc b{color:#f5c542}
+#play{display:none}#play.on{display:flex;flex-direction:column;align-items:center}
+#word{width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3e50c7,#232f8a 70%);border:14px solid #1b2433;box-shadow:0 0 0 8px #1fb5a3,0 10px 0 8px #12404a;color:#fff;font-size:34px;padding:40px;margin:24px auto;position:relative}
+#word:before{content:'catch phrase!';position:absolute;top:34px;left:0;right:0;font-size:16px;color:#7fd8e6;font-style:italic}
+#bar{background:linear-gradient(90deg,#f5c542,#f39a1e,#e8432e);height:14px;border:3px solid #1b2433;width:100%}
+#end h1,#ov h1{color:#f5c542;font-size:60px;text-shadow:4px 4px 0 #7b2d9b;transform:rotate(-4deg)}
+#ov,#set{background:rgba(15,60,70,.95)}
+.tg{background:#1b2433;border:3px solid #1fb5a3;border-radius:30px}
+select{border:4px solid #1b2433;border-radius:30px;background:#eafcff;font-weight:700}
 </style></head><body>
-<div id="home" class="s on"><h1>Catch Phrase</h1><p>Works offline. Pass the phone, describe the word, don't say it.</p>
+<div id="home" class="s on"><h1 class="logo"><span class="c">catch</span><span class="p">phrase!</span></h1><p>Works offline. Pass the phone, describe the word, don't say it.</p>
 <select id="cat"></select><select id="len"><option value="45">Short round (45-75s)</option><option value="60" selected>Normal round (60-90s)</option><option value="90">Long round (90-120s)</option></select>
 <button class="g" onclick="setOpen()">⚙️ Game settings</button>
 <div class="sc"><div>Team A<b id="a">0</b></div><div>Team B<b id="b">0</b></div></div>
@@ -19,7 +35,7 @@ button.g{background:#555}select{font-size:20px;padding:12px;width:100%;border-ra
 <div id="set" class="ovl"><div style="width:100%;max-width:480px"><h1 style="font-size:34px">Game settings</h1><p>Joker cards pop up on about 1 in 5 correct answers.</p><div class="tg">Joker: skip a person<input type="checkbox" id="jSkip"></div><div class="tg">Joker: reverse direction<input type="checkbox" id="jRev"></div><div class="tg">Joker: go twice<input type="checkbox" id="jTwice"></div>
 <button onclick="setClose()">Done</button></div></div>
 <div id="ov"><h1 id="ovT"></h1><p id="ovP"></p><button id="ovB"></button><button class="g" id="ovX" onclick="quit()">Exit to scoreboard</button></div>
-<div id="end" class="s"><h1>BUZZ!</h1><p>Time's up. The team holding the phone loses the round.</p><p>Who scores the point?</p>
+<div id="end" class="s"><h1>ZAP!</h1><p>Time's up. The team holding the phone loses the round.</p><p>Who scores the point?</p>
 <div class="sc"><button onclick="pt('a')">Team A</button><button onclick="pt('b')">Team B</button></div><button class="g" onclick="show('home')">No point</button></div>
 <script>
 const W={
