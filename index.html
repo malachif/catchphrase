@@ -38,7 +38,7 @@ function ding(){beep(1046,.12);setTimeout(()=>beep(1568,.25),110)}
 function boop(){beep(300,.15,.9,'square');setTimeout(()=>beep(180,.3,.9,'square'),140)}
 function next(first){if(!first)ding();if(!deck.length)deck=shuffle(W[cat.value]);document.getElementById('word').textContent=deck.pop()}
 function skip(){boop();if(!deck.length)deck=shuffle(W[cat.value]);document.getElementById('word').textContent=deck.pop()}
-function tick(){let left=end-Date.now();if(left<=0){for(let i=0;i<4;i++)setTimeout(()=>{beep(880,.25,1,'sawtooth');beep(660,.25,1,'square')},i*300);navigator.vibrate&&navigator.vibrate(800);show('end');return}
+function tick(){let left=end-Date.now();if(left<=0){[150,153,300,450,600].forEach(f=>beep(f,1.6,.5,'sawtooth'));navigator.vibrate&&navigator.vibrate(800);show('end');return}
 let p=left/tot;document.getElementById('bar').style.width=(p*100)+'%';let sec=left/1000;let iv=sec>20?1000:sec>10?600:sec>5?350:150;beep(sec>10?660:sec>5?880:1100,.04);t=setTimeout(tick,iv)}
 function pt(x){sc[x]++;save();show('home')}
 function reset(){sc={a:0,b:0};save()}
